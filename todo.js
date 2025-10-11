@@ -1,5 +1,6 @@
 const add = document.getElementById("add-task");
 const todoList = document.getElementById("todo-list");
+const user = document.getElementById("user");
 
 let tasks = [];
 
@@ -28,8 +29,6 @@ function showTask() {
         todoList.appendChild(check);
         todoList.appendChild(todo);
         todoList.appendChild(document.createElement("br"));
-
-
     });   
 }
 
@@ -55,6 +54,17 @@ add.addEventListener('submit', e => {
     console.log(add.task.value);
     add.task.value = "";
     console.log(tasks);
+});
+
+user.addEventListener("submit", e => {
+    e.preventDefault();
+
+    let txt = user.user.value.trim();
+
+    if(txt != "") {
+       document.getElementById("userinput").textContent = "User Name: " + txt; 
+    }
+    user.user.value = "";
 });
 
 todoList.addEventListener('change', e => {
