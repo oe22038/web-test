@@ -41,10 +41,22 @@ function output() {
 }
 
 async function login() {
-    const res = await fetch("./api/login", {method: "POST"});
+    const res = await fetch("./api/login", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userName: un.value, passWord: pw.value })
+    });
     const data = await res.json();
 
-    window.location.href = `/user/${data.userID}`;
+    if(data.status === "login_ok") {
+        window.location.href = `/user/${un}`;
+    }
+    else if(data.status === "signup_ok") {
+        window.location.href = `/user/${un}`;
+    }
+    else {
+        alert(data.message);
+    }
 }
 
 loginBtn.addEventListener("click", e => {
