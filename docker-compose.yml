@@ -21,7 +21,7 @@ services:       # ここから各コンテナ（サービス）の設定
       - ./backend:/app/backend    # ローカルの backend フォルダをコンテナにマウント（コード変更が即反映）
       - ./frontend:/app/frontend  # フロントも同様にマウント（静的ファイルを共有）
     
-    command: ["node", "backend/server.js"]  # コンテナ起動時に実行するコマンド
+    command: ["node", "server.js"]  # コンテナ起動時に実行するコマンド
 
   # データベース（PostgreSQL）
   db:

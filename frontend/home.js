@@ -3,8 +3,8 @@ function output(db) {
 
     out.innerHTML = `
         <tr>
-            <td>[ User Name ]</td>
-            <td>[ Pass Word ]</td>
+            <td>User Name</td>
+            <td>Pass Word</td>
         </tr>
     `;
 
