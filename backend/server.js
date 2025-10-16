@@ -13,6 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const frontendPath = path.resolve(__dirname, "../frontend");
 
+//ログイン処理
 app.post("/api/login", async (req, res) => {
     const {userName, passWord} = req.body;
 
@@ -25,12 +26,14 @@ app.post("/api/login", async (req, res) => {
 
         if(result.rows.length > 0) {
             // 存在している場合
-            const user = result.rows[0]; // 検索したデータをオブジェクトで取得
-            if(user.passWord === passWord) { // ===で厳密に
-                return res.json({status: "login_ok", message: "ログイン成功"});
+            const user = result.rows[0];
+            console.log(user);
+            // 検索したデータをオブジェクトで取得
+            if(user.password === passWord) { // ===で厳密に
+                return res.json({user: user.username, status: "login_ok", message: "ログイン成功"});
             } 
             else {
-                return res.json({status: "error", message: "パスワードが違います"});
+                return res.json({user: user.username, status: "error", message: "パスワードが違います"});
             }
         }
         else {
@@ -39,17 +42,23 @@ app.post("/api/login", async (req, res) => {
                 `INSERT INTO users (username, password) VALUES ($1, $2)`,
                 [userName, passWord]
             );
-            return res.json({status: "signup_ok", message: "新規登録完了"});
+            return res.json({user: user.username, status: "signup_ok", message: "新規登録完了"});
         }
     }
     catch(err) {
         console.error(err);
-        res.status(500).json({status: "error", message: "サーバエラー"});
+        res.status(500).json({user: user.username, status: "error", message: "サーバエラー"});
     }
 });
 
-app.get("/user/:id", (req, res) => {
-    res.sendFile(path.join(frontendPath, 'homepage.html'));
+app.get("/user/:id", async (req, res) => {
+    await res.sendFile(path.join(frontendPath, 'homepage.html'));
+});
+
+app.get("/api/users", async (req, res) => {
+    // DBの内容取得
+    const db = await pool.query("SELECT * FROM users");
+    res.json(db.rows);
 });
 
 app.use(express.static(frontendPath));
