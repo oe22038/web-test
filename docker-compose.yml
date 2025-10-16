@@ -1,0 +1,43 @@
+# version: "3.9"  # Composeファイルのバージョン指定（3.9が現在の安定版）
+
+services:       # ここから各コンテナ（サービス）の設定
+
+  # Webアプリ（Express.js）
+  web:
+    build: .                      # 同じディレクトリにある Dockerfile からイメージを作成
+    container_name: webapp-express # コンテナの名前（任意）
+    ports:
+      - "3000:3000"               # ホスト:コンテナ のポート対応。http://localhost:3000でアクセス可能
+
+    environment:                  # コンテナ内の環境変数を設定
+      - DATABASE_URL=postgresql://postgres:password@db:5432/postgres
+      # ↑ Express から PostgreSQL に接続するための接続URL
+      #   「@db」となっているのは、下の "db" サービス名をホスト名として参照している
+
+    depends_on:
+      - db                        # dbコンテナが起動してからwebを立ち上げる
+
+    volumes:
+      - ./backend:/app/backend    # ローカルの backend フォルダをコンテナにマウント（コード変更が即反映）
+      - ./frontend:/app/frontend  # フロントも同様にマウント（静的ファイルを共有）
+    
+    command: ["node", "backend/server.js"]  # コンテナ起動時に実行するコマンド
+
+  # データベース（PostgreSQL）
+  db:
+    image: postgres:15           # 公式PostgreSQLイメージを使用（バージョン15）
+    container_name: webapp-postgres
+    restart: always               # 落ちたときに自動再起動（便利）
+    environment:
+      POSTGRES_USER: postgres     # DBのユーザ名
+      POSTGRES_PASSWORD: password # DBのパスワード
+      POSTGRES_DB: postgres       # 初期DB名
+    ports:
+      - "5432:5432"               # ホスト側の5432ポートをDBに接続可能にする
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      # ↑ DBデータの永続化（コンテナ削除してもデータが残る）
+
+# 永続ボリューム設定
+volumes:
+  db_data:                        # 名前付きボリューム。PostgreSQLのデータ保存領域
