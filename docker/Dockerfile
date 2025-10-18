@@ -1,0 +1,3 @@
+FROM postgres:16
+
+EXPOSE ${POSTGRES_PORT}

@@ -2,18 +2,6 @@ const loginBtn = document.getElementById("login");
 const un = document.getElementById("un");
 const pw = document.getElementById("pw");
 
-let userInfo = [];
-const uid = Date.now();
-
-function saveInfo(userName, passWord) {
-    const user = {
-        "id": uid,
-        "userName": userName,
-        "passWord": passWord
-    };
-    userInfo.push(user);
-}
-
 async function login() {
     const res = await fetch("./api/login", {
         method: "POST",
@@ -39,10 +27,7 @@ loginBtn.addEventListener("click", e => {
     const passWord = pw.value.trim();
     
     if(userName != "" && passWord != "") {
-        saveInfo(userName, passWord);
-        //output();
-
-        //home.htmlへ
+        console.log("login");
         login();
     }
     else {

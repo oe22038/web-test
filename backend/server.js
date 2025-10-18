@@ -3,7 +3,8 @@ import path from "path";
 import bodyParser from "body-parser";
 import { fileURLToPath } from "url";
 
-import pool from "./db.js"; // db.jsをimport
+import {ENV} from "./app/config/env.js"
+import pool from "./app/config/db.js"; // db.jsをimport
 
 const app = express();
 app.use(bodyParser.json());
@@ -12,6 +13,8 @@ app.use(bodyParser.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const frontendPath = path.resolve(__dirname, "../frontend");
+
+let uid = 0;
 
 //ログイン処理
 app.post("/api/login", async (req, res) => {
@@ -39,15 +42,16 @@ app.post("/api/login", async (req, res) => {
         else {
             // ユーザ登録されてない
             await pool.query(
-                `INSERT INTO users (username, password) VALUES ($1, $2)`,
-                [userName, passWord]
+                `INSERT INTO users (id, username, password) VALUES ($1, $2, $3)`,
+                [uid, userName, passWord]
             );
-            return res.json({user: user.username, status: "signup_ok", message: "新規登録完了"});
+            uid ++;
+            return res.json({user: userName, status: "signup_ok", message: "新規登録完了"});
         }
     }
     catch(err) {
         console.error(err);
-        res.status(500).json({user: user.username, status: "error", message: "サーバエラー"});
+        res.status(500).json({user: userName, status: "error", message: "サーバエラー"});
     }
 });
 
@@ -63,18 +67,6 @@ app.get("/api/users", async (req, res) => {
 
 app.use(express.static(frontendPath));
 
-const port = 3000;
-app.listen(port, () => {
-    console.log(`localhost: http://localhost:${port}`);
+app.listen(ENV.PORT, () => {
+    console.log(`localhost: http://localhost:${ENV.PORT}`);
 });
-
-// 初回起動時にテーブルを作成
-(async () => {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
-      username VARCHAR(255),
-      password VARCHAR(255)
-    );
-  `);
-})();

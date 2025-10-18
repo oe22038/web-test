@@ -3,19 +3,23 @@ function output(db) {
 
     out.innerHTML = `
         <tr>
-            <td>[ User Name ]</td>
-            <td>[ Pass Word ]</td>
+            <td>User ID</td>
+            <td>User Name</td>
+            <td>Pass Word</td>
         </tr>
     `;
 
     db.forEach(info => {
         const tr = document.createElement("tr");
+        const uid = document.createElement("td");
         const un = document.createElement("td");
         const pw = document.createElement("td");
 
+        uid.textContent = info.id;
         un.textContent = info.username;
         pw.textContent = info.password;
 
+        tr.appendChild(uid);
         tr.appendChild(un);
         tr.appendChild(pw);
         out.appendChild(tr);
