@@ -11,7 +11,7 @@ export const ENV = {
     PORT: process.env.POSTGRES_PORT || 5432,
     USER: process.env.POSTGRES_USER || "user",
     PASSWORD: process.env.POSTGRES_PASSWORD || "password",
-    NAME: process.env.POSTGRES_NAME || "webtest",
+    NAME: process.env.POSTGRES_NAME || "postgres",
   },
 
   SECURITY: {

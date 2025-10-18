@@ -4,7 +4,7 @@
 ### 初回ビルド
 
 ```
-docker compose up --build
+docker compose up --build -d
 ```
 プロジェクトのルートで実行
 
@@ -20,8 +20,12 @@ docker compose down
 
 ### DB確認
 ```
-docker exec -it webapp-postgres psql -U postgres
-SELECT * FROM users
+docker exec -it db psql -U user -d postgres
 ```
+`postgres=#`と表示されればOK．`Ctrl + D`で終了．
 
-※ `\q`で終了
+- DB一覧を表示
+    > `\dt`
+
+- DB（`users`）の全データを表示
+    > `SELECT * FROM users;`
