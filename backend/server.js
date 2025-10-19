@@ -16,6 +16,14 @@ const frontendPath = path.resolve(__dirname, "../frontend");
 
 let uid = 0;
 
+app.get('/', async (req, res) => {
+    await res.redirect('/login');
+});
+
+app.get('/login', async (req, res) => {
+    await res.sendFile(path.join(frontendPath, 'index.html'));
+});
+
 //ログイン処理
 app.post("/api/login", async (req, res) => {
     const {userName, passWord} = req.body;
