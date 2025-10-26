@@ -14,7 +14,7 @@ services:
       - "5432:5432"                    # ローカル:コンテナ
     volumes:
       - db-data:/var/lib/postgresql/data
-      - ./docker/init:/docker-entrypoint-initdb.d
+      - ./docker/init/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - backend-net
 
