@@ -1,3 +1,4 @@
+import createError from "http-errors";
 import * as userModels from "../models/user_model.js"
 
 let uid = 0;
@@ -28,7 +29,8 @@ async function login(req, res) {
         }
     } catch(err) {
         console.error(err);
-        res.status(500).json({user: userName, status: "error", message: "サーバエラー"});
+        //res.status(500).json({user: userName, status: "error", message: "サーバエラー"});
+        next(createError(500, "サーバエラー"));
     }
 }
 
@@ -37,7 +39,8 @@ async function getUsers(req, res) {
         const users = await userModels.getAllUsers();
         res.json(users);
     } catch(err) {
-        res.status(500).json({message: "ユーザ取得エラー"});
+        //res.status(500).json({message: "ユーザ取得エラー"});
+        next(createError(500, "ユーザ取得エラー"));
     }
 }
 

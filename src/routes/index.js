@@ -4,7 +4,6 @@ import page_routes from "./page_routes.js";
 
 const router = express.Router();
 
-router.use("/api", user_routes);
-router.use("/", page_routes);
+router.use("/", user_routes);
 
 export default router;
